@@ -60,6 +60,7 @@ export const MessageCompoent: React.FunctionComponent<{ info: messageInfo }> = (
                     </ErrorBoundary>
                     {
                         info.message.time != undefined
+                        //@ts-ignore
                             ? <p className="date">{DateFormater(info.message.time)}</p>
                             : null
                     }

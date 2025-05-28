@@ -1,6 +1,8 @@
 'use client'
 
 import { type FC, useState } from 'react'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import { cn } from '../../../lib/utils'
 
@@ -25,7 +27,6 @@ import type {
   TableBodyProps,
   TableRowProps,
   TableCellProps,
-  PreparedTextProps
 } from './types'
 
 import { HEADING_SIZES } from '../Heading/constants'
@@ -116,13 +117,23 @@ const HorizontalRule = ({ className, ...props }: HorizontalRuleProps) => (
   />
 )
 
-const InlineCode: FC<PreparedTextProps> = ({ children }) => {
+const InlineCode: FC<React.PropsWithChildren<{ className?: string; inline?: boolean; }>> = ({ children, className, inline }) => {
+  // 嘗試從 className 取出語言
+  const match = /language-(\w+)/.exec(className || '');
+  const language = match?.[1] || "js";
+
+  // 對於 inline code 可以直接用 <code> 包起來，或照原本 render
   return (
-    <code className="relative whitespace-pre-wrap rounded-sm bg-background-secondary/50 p-1">
-      {children}
-    </code>
-  )
-}
+    <SyntaxHighlighter
+      style={oneDark}
+      language={language}
+      PreTag="code"
+      customStyle={{ display: inline ? 'inline' : 'block', padding: '0.15em 0.4em', borderRadius: 4, fontSize: '0.95em' }}
+    >
+      {String(children)}
+    </SyntaxHighlighter>
+  );
+};
 
 const Blockquote = ({ className, ...props }: BlockquoteProps) => (
   <blockquote
@@ -170,8 +181,8 @@ const Heading6 = ({ className, ...props }: HeadingProps) => (
   />
 )
 
-const Img = ({ src, alt }: ImgProps) => {
-  const [error, setError] = useState(false)
+const Img = ({ src }: ImgProps) => {
+  const [error] = useState(false)
 
   if (!src) return null
 
@@ -181,7 +192,7 @@ const Img = ({ src, alt }: ImgProps) => {
         <div className="flex h-40 flex-col items-center justify-center gap-2 rounded-md bg-secondary/50 text-muted">
           <Paragraph className="text-primary">Image unavailable</Paragraph>
         </div>
-      ) :  null}
+      ) : null}
     </div>
   )
 }

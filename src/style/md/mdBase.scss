@@ -1,0 +1,28 @@
+// prose prose-h1:text-xl dark:prose-invert flex w-full flex-col gap-y-5 rounded-lg
+.markdown {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    row-gap: 1.25rem;
+    border-radius: 1.5rem;
+
+    ul,
+    ol {
+        margin-left: 1.5rem;
+    }
+
+    h1 {
+        font-size: 1.25rem;
+    }
+
+    pre {
+        padding: 1.5% 3%;
+        background-color: rgb(40, 44, 52);
+        border-radius: .3rem;
+    }
+
+    code{
+        max-width: 30rem;
+        word-wrap:break-word;
+    }
+}

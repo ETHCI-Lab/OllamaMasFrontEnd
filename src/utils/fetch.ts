@@ -5,7 +5,8 @@ export async function asyncGet(api: string, Auth: boolean) {
                 Auth ? {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 } : undefined
-            )
+            ),
+            mode: "cors"
         })
         try {
             let data = res.json()
@@ -32,6 +33,7 @@ export async function asyncPost(api: string, body: {} | FormData, Auth: boolean)
             }
         ),
         body: body instanceof FormData ? body : JSON.stringify(body),
+        mode: "cors"
     })
     try {
         let data = res.json()
@@ -47,6 +49,28 @@ export async function asyncPatch(api: string, body: {} | FormData) {
         headers: new Headers({
             'Access-Control-Allow-Origin': "http://localhost:5173/",
         }),
+        body: body instanceof FormData ? body : JSON.stringify(body),
+        mode: "cors"
+    })
+    try {
+        let data = res.json()
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export async function asyncDelete(api: string, body: {} | FormData, Auth: boolean) {
+    const res: Response = await fetch(api, {
+        method: 'Delete',
+        headers: new Headers(
+            Auth ? {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'content-Type':"application/json"
+            } : {
+                'content-Type':"application/json"
+            }
+        ),
         body: body instanceof FormData ? body : JSON.stringify(body),
         mode: "cors"
     })

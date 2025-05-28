@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/react-syntax-highlighter": "^15.5.13",
     "clsx": "^2.1.1",
     "genkit": "^1.9.0",
     "genkitx-ollama": "^1.9.0",
@@ -19,6 +20,7 @@
     "react-error-boundary": "^6.0.0",
     "react-markdown": "^7.1.0",
     "react-router": "^7.6.0",
+    "react-syntax-highlighter": "^15.6.1",
     "rehype-highlight": "^7.0.2",
     "rehype-katex": "^7.0.1",
     "rehype-raw": "^7.0.0",

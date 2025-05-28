@@ -146,8 +146,8 @@ const Heading6 = ({ className, ...props }: HeadingProps) => (
   <h6 className={cn(className, PARAGRAPH_SIZES.lead)} {...filterProps(props)} />
 )
 
-const Img = ({ src, alt }: ImgProps) => {
-  const [error, setError] = useState(false)
+const Img = ({ src }: ImgProps) => {
+  const [error] = useState(false)
 
   if (!src) return null
 

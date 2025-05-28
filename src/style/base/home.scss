@@ -48,11 +48,25 @@
                 }
             }
 
+            .title {
+                margin-left: .8rem;
+                white-space: nowrap;
+                /* 不換行 */
+                overflow: hidden;
+                /* 超出隱藏 */
+                text-overflow: ellipsis;
+                /* 超出顯示... */
+                width: 60%;
+            }
+
             .sessionList {
                 display: flex;
                 flex-direction: column;
                 cursor: pointer;
                 gap: .5rem;
+                max-height: 80vh;
+                overflow: scroll;
+                margin-top: -1rem;
 
                 p {
                     font-size: 12px;
@@ -75,6 +89,16 @@
 
                     &:hover {
                         background-color: #E3E3E3;
+                    }
+
+                    i {
+                        font-size: 1.5rem;
+                        transition: all .25s;
+
+                        &:hover {
+                            cursor: pointer;
+                            color: #ff6161;
+                        }
                     }
                 }
 

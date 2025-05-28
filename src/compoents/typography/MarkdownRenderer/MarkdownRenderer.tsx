@@ -18,7 +18,7 @@ const MarkdownRenderer: FC<MarkdownRendererProps> = ({
   //@ts-ignore
   <ReactMarkdown
     className={cn(
-      'prose prose-h1:text-xl dark:prose-invert flex w-full flex-col gap-y-5 rounded-lg',
+      'markdown',
       classname
     )}
     components={{ ...(inline ? inlineComponents : components) }}

@@ -2,23 +2,25 @@ import type React from "react";
 import { useEffect, useRef, useState } from "react";
 
 import type { resp } from "../interface/resp";
-import { asyncGet, asyncPost } from "../utils/fetch";
+import { asyncDelete, asyncGet, asyncPost } from "../utils/fetch";
 import { AgentApi, SessionApi, UserApi } from "../enum/api";
 import type { Session } from "../interface/Session";
 import { Chat, type ChatInfo } from "../compoents/Chat";
 import type { userInfo } from "../interface/userInfo";
 import { useNavigate, useParams } from "react-router";
-import type { QueryAgentResult } from "../interface/agentResp";
 import type { ToolResponsePart, MessageData } from "genkit";
+// import { Flows } from "../enum/flows";
 
 export const Home: React.FunctionComponent = () => {
 
     const navigate = useNavigate();
+    // const Agents = Object.keys(Flows)
     const cache = useRef<boolean>(false)
     const [sessions, setSessions] = useState<Array<Session>>([])
     const [currentSession, setCurrentSession] = useState<Session>()
     const [isPending, setIsPending] = useState<boolean>(false)
     const [user, setUser] = useState<userInfo>()
+    // const [flow, setFlow] = useState<string>(Agents[0]);
     const choosenSid = useParams().sid
 
     useEffect(() => {
@@ -27,6 +29,7 @@ export const Home: React.FunctionComponent = () => {
          */
         if (!cache.current) {
             cache.current = true;
+
             updateSessionList()
             syncUserInfo()
         }
@@ -63,12 +66,24 @@ export const Home: React.FunctionComponent = () => {
         }
     }
 
+    const delSession = async (sid:string) =>{
+        const res:resp<string> = await asyncDelete(SessionApi.delSessionByID,{sid:sid},true)
+        if (res.code == 200) {
+            alert("已刪除")
+            navigate(`/`)
+            updateSessionList()
+        }else{
+            alert(res.message)
+        }
+    }
+
     const sessionList = sessions?.map((Session, index) => {
         return <div className={`session ${Session._id == currentSession?._id ? ' active' : ''}`} onClick={() => { switchSession(Session) }} key={index} >
             <img src="https://omg.ethci.app/images/66d72cbb0ce1e345dd729031/76a24c8c-8d15-47fe-905a-b6e4e9f73e69__clipboard_1747669767825_image.png" alt="" />
             <div className="title">
                 {Session.title}
             </div>
+            <i className="bi bi-x" onClick={()=>{delSession(Session._id as string)}}></i>
         </div>
     })
 
@@ -82,6 +97,7 @@ export const Home: React.FunctionComponent = () => {
         setIsPending(true);
 
         currentSession?.message.push({
+            //@ts-ignore
             role: "user",
             content: [{ text: message }],
             output: undefined,
@@ -103,10 +119,11 @@ export const Home: React.FunctionComponent = () => {
             }
         })
 
-        const res: QueryAgentResult = await asyncPost(AgentApi.pythonFlow, {
+        await asyncPost(AgentApi.pythonSingleFlow, {
             "data": {
                 "sid": currentSession?._id,
-                "input": message
+                "input": message,
+                // "uid":user?.sid
             }
         }, true)
 
@@ -131,8 +148,8 @@ export const Home: React.FunctionComponent = () => {
                     <p>新對話</p>
                     <i className="bi bi-pencil-square"></i>
                 </div>
+                <p className="title">對話紀錄</p>
                 <div className="sessionList">
-                    <p>對話紀錄</p>
                     {sessionList}
                 </div>
             </div>
@@ -142,7 +159,7 @@ export const Home: React.FunctionComponent = () => {
                         <Chat info={chatInfo} />
                         :
                         <div className="emptyChat">
-                            <p className= "welcome">
+                            <p className="welcome">
                                 <img src="https://omg.ethci.app/images/66d72cbb0ce1e345dd729031/76a24c8c-8d15-47fe-905a-b6e4e9f73e69__clipboard_1747669767825_image.png" alt="" />
                                 {`你好, ${user?.name}`}
                             </p>
@@ -155,3 +172,5 @@ export const Home: React.FunctionComponent = () => {
         </div>
     </div>
 }
+
+
